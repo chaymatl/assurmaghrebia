@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Assurance Maghrebia{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <img src="{% static 'maghrebia-logo.jpg' %}" alt="Logo Maghrebia" style="height:40px; vertical-align:middle; margin-right:10px;">
+    Assurance Maghrebia - Espace Admin
+</h1>
+{% endblock %}
