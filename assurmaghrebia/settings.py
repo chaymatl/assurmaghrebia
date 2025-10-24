@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'espace_client',  # ✅ Ajouté ton app
+    'espace_client', 
+     "sinistre", # ✅ Ajouté ton app
 ]
 
 MIDDLEWARE = [

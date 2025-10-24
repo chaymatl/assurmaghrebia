@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Mes sinistres</h2>
+{% if user.is_staff %}
+  <p>Affichage pour admin</p>
+{% endif %}
+<a href="{% url 'sinistre:declarer_sinistre' %}">Déclarer un sinistre</a>
+<table>
+  <thead>
+    <tr><th>ID</th><th>Type</th><th>Statut</th><th>Date</th></tr>
+  </thead>
+  <tbody>
+    {% for s in sinistres %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td>{{ s.type_sinistre }}</td>
+      <td>{{ s.get_statut_display }}</td>
+      <td>{{ s.date_declaration|date:"d/m/Y H:i" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Aucun sinistre.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
