@@ -15,25 +15,22 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 SECRET_KEY = 'django-insecure-v-qn30)w^!3z#2=!c!%56#xa9wy*j*=ki=u0oifl(%+3(69z#^'
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # ✅ Added for local dev
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
-
 INSTALLED_APPS = [
+    'jazzmin',  # 👈 AJOUTEZ CETTE LIGNE EN PREMIER !
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'espace_client', 
-     "sinistre", # ✅ Ajouté ton app
+    'espace_client',
+    'sinistre',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +48,7 @@ ROOT_URLCONF = 'assurmaghrebia.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ✅ Pour les templates globaux
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,7 +63,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'assurmaghrebia.wsgi.application'
 
-
 # Database
 DATABASES = {
     'default': {
@@ -74,7 +70,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -84,29 +79,109 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # Internationalization
-LANGUAGE_CODE = 'fr'  # ✅ Français pour Maghrebia
-TIME_ZONE = 'Africa/Tunis'  # ✅ Fuseau horaire Tunisie
+LANGUAGE_CODE = 'fr'
+TIME_ZONE = 'Africa/Tunis'
 USE_I18N = True
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# ✅ Ajouté : dossier static personnalisé (logo, CSS, etc.)
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-# ✅ Ajouté : Répertoire de collecte des fichiers statiques (nécessaire pour la prod)
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Ou un autre chemin selon votre déploiement
-
-# ✅ Ajouté : Configuration pour les fichiers média (à utiliser plus tard)
+# Media files (user uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Authentication redirects
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ========================================
+# 🎨 CONFIGURATION JAZZMIN (Admin moderne)
+# ========================================
+JAZZMIN_SETTINGS = {
+    # Titre de l'application
+    "site_title": "AssurMaghrebia Admin",
+    "site_header": "AssurMaghrebia",
+    "site_brand": "AssurMaghrebia",
+    "welcome_sign": "Bienvenue sur l'administration AssurMaghrebia",
+    "copyright": "AssurMaghrebia 2025",
+    
+    # Recherche
+    "search_model": ["auth.User", "sinistre.Sinistre"],
+    
+    # Menu
+    "topmenu_links": [
+        {"name": "Accueil", "url": "admin:index"},
+        {"name": "Voir le site", "url": "/", "new_window": True},
+    ],
+    
+    # Options d'affichage
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    
+    # Ordre des applications
+    "order_with_respect_to": ["auth", "espace_client", "sinistre"],
+    
+    # Icônes pour vos modèles
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "espace_client.ClientMaghrebia": "fas fa-user-circle",
+        "espace_client.PoliceMaghrebia": "fas fa-file-contract",
+        "espace_client.SinistreMaghrebia": "fas fa-exclamation-triangle",
+        "sinistre.Sinistre": "fas fa-file-medical-alt",
+    },
+    
+    # Thème (options: default, darkly, flatly, solar, superhero, etc.)
+    "theme": "flatly",
+    
+    # Format des formulaires
+    "changeform_format": "horizontal_tabs",
+}
+
+# Options UI
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-primary",
+    "accent": "accent-primary",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "flatly",
+    "dark_mode_theme": None,
+}
+
+# Configuration Email pour réinitialisation de mot de passe
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # ou votre serveur SMTP
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'chaayma.tlatli@gmail.com'  # Votre email
+EMAIL_HOST_PASSWORD = 'CHchchch123'  # Mot de passe d'application Gmail
+DEFAULT_FROM_EMAIL = 'AssurMaghrebia <chaayma.tlatli@gmail.com>'
+
+# URL de réinitialisation (pour les emails)
+PASSWORD_RESET_TIMEOUT = 3600  # 1 heure (en secondes)
+# Mode développement : affiche les emails dans la console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

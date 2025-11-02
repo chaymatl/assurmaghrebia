@@ -1,25 +1,344 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #1e40af;
+        --primary-dark: #1e3a8a;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --bg-light: #f9fafb;
+        --white: #ffffff;
+        --border: #e5e7eb;
+    }
+
+    .sinistres-wrapper {
+        background: var(--bg-light);
+        min-height: calc(100vh - 200px);
+        padding: 40px 20px;
+    }
+
+    .sinistres-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .page-header {
+        background: var(--white);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0;
+    }
+
+    .btn-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 24px;
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        color: var(--white);
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-new:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        color: var(--white);
+    }
+
+    /* Alert */
+    .alert-admin {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border-left: 4px solid var(--primary);
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        color: var(--primary-dark);
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(30, 64, 175, 0.1);
+    }
+
+    /* Table Container */
+    .table-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .sinistres-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .sinistres-table thead {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+    }
+
+    .sinistres-table th {
+        padding: 16px 20px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .sinistres-table tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .sinistres-table tbody tr:hover {
+        background: var(--bg-light);
+        transform: scale(1.01);
+    }
+
+    .sinistres-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .sinistres-table td {
+        padding: 18px 20px;
+        color: var(--text-dark);
+        font-size: 0.95rem;
+    }
+
+    .id-cell {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    /* Status Badges */
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .badge-en-attente {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-en-cours {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .badge-accepte, .badge-clos {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-rejete, .badge-refuse {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-default {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        color: var(--text-light);
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        margin-bottom: 24px;
+    }
+
+    .empty-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .empty-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+        color: var(--white);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sinistres-wrapper {
+            padding: 20px 16px;
+        }
+
+        .page-header {
+            padding: 20px;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+        }
+
+        .btn-new {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .sinistres-table th,
+        .sinistres-table td {
+            padding: 12px 10px;
+            font-size: 0.85rem;
+        }
+
+        .empty-icon {
+            font-size: 3.5rem;
+        }
+
+        .empty-text {
+            font-size: 1rem;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .sinistres-container > * {
+        animation: fadeInUp 0.5s ease-out;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h2>Mes sinistres</h2>
-{% if user.is_staff %}
-  <p>Affichage pour admin</p>
-{% endif %}
-<a href="{% url 'sinistre:declarer_sinistre' %}">Déclarer un sinistre</a>
-<table>
-  <thead>
-    <tr><th>ID</th><th>Type</th><th>Statut</th><th>Date</th></tr>
-  </thead>
-  <tbody>
-    {% for s in sinistres %}
-    <tr>
-      <td>{{ s.id }}</td>
-      <td>{{ s.type_sinistre }}</td>
-      <td>{{ s.get_statut_display }}</td>
-      <td>{{ s.date_declaration|date:"d/m/Y H:i" }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">Aucun sinistre.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="sinistres-wrapper">
+    <div class="sinistres-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">📋 Mes sinistres</h1>
+            <a href="{% url 'sinistre:declarer_sinistre' %}" class="btn-new">
+                <span>➕</span>
+                <span>Déclarer un nouveau sinistre</span>
+            </a>
+        </div>
+
+        <!-- Admin Alert -->
+        {% if user.is_staff %}
+        <div class="alert-admin">
+            <strong>👨‍💼 Mode administrateur</strong> – Vous visualisez tous les sinistres de la plateforme.
+        </div>
+        {% endif %}
+
+        <!-- Table or Empty State -->
+        {% if sinistres %}
+        <div class="table-card">
+            <div class="table-wrapper">
+                <table class="sinistres-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type de sinistre</th>
+                            <th>Statut</th>
+                            <th>Date de déclaration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in sinistres %}
+                        <tr onclick="window.location.href='{% url 'sinistre:detail_sinistre' s.id %}'">
+                            <td class="id-cell">#{{ s.id }}</td>
+                            <td>{{ s.get_type_sinistre_display|default:"Non spécifié" }}</td>
+                            <td>
+                                {% if s.statut == 'en_attente' or s.statut == 'EN_ATTENTE' %}
+                                    <span class="badge-status badge-en-attente">⏳ {{ s.get_statut_display }}</span>
+                                {% elif s.statut == 'en_cours' or s.statut == 'EN_COURS' %}
+                                    <span class="badge-status badge-en-cours">🔄 {{ s.get_statut_display }}</span>
+                                {% elif s.statut == 'accepte' or s.statut == 'ACCEPTE' or s.statut == 'clos' or s.statut == 'CLOS' %}
+                                    <span class="badge-status badge-accepte">✅ {{ s.get_statut_display }}</span>
+                                {% elif s.statut == 'rejete' or s.statut == 'REJETE' or s.statut == 'refuse' or s.statut == 'REFUSE' %}
+                                    <span class="badge-status badge-rejete">❌ {{ s.get_statut_display }}</span>
+                                {% else %}
+                                    <span class="badge-status badge-default">{{ s.get_statut_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ s.date_declaration|date:"d/m/Y à H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📄</div>
+            <p class="empty-text">Aucun sinistre déclaré pour le moment.</p>
+            <a href="{% url 'sinistre:declarer_sinistre' %}" class="empty-action">
+                <span>➕</span>
+                <span>Déclarer votre premier sinistre</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

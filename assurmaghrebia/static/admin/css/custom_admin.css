@@ -1,0 +1,28 @@
+/* Personnalisation de l'admin Django */
+#header {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    color: white;
+}
+
+#branding h1 {
+    color: white;
+}
+
+a:link, a:visited {
+    color: #1e40af;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: #1e40af;
+}
+
+.button, input[type=submit], input[type=button] {
+    background: #1e40af;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.button:hover, input[type=submit]:hover {
+    background: #1e3a8a;
+}

@@ -1,0 +1,247 @@
+<!-- templates/accueil.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Accueil - AssurMaghrebia{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #1e40af;
+        --primary-dark: #1e3a8a;
+        --accent: #f59e0b;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --white: #ffffff;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: var(--white);
+        border-radius: 24px;
+        padding: 80px 60px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        text-align: center;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .logo-wrapper img {
+        height: 70px;
+        margin-bottom: 24px;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 16px;
+    }
+
+    .hero-title .highlight {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-light);
+        margin-bottom: 40px;
+    }
+
+    /* CTA Buttons */
+    .cta-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 32px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-accent {
+        background: linear-gradient(135deg, var(--accent) 0%, #d97706 100%);
+        color: var(--white);
+    }
+
+    .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+    }
+
+    .feature-card {
+        background: var(--white);
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+        text-align: center;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1);
+    }
+
+    .feature-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 12px;
+    }
+
+    .feature-description {
+        color: var(--text-light);
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 50px 30px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+        }
+
+        .cta-group {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="logo-wrapper">
+            <img src="{% static 'images/logo.png' %}" alt="AssurMaghrebia" />
+        </div>
+        <h1 class="hero-title">Assur<span class="highlight">Maghrebia</span></h1>
+        <p class="hero-subtitle">Gestion simplifiée de vos sinistres</p>
+
+        {% if user.is_authenticated %}
+            <div class="cta-group">
+                <a href="{% url 'sinistre:liste_sinistres' %}" class="btn btn-primary">
+                    <span>📁</span>
+                    <span>Mes sinistres</span>
+                </a>
+                <a href="{% url 'sinistre:declarer_sinistre' %}" class="btn btn-accent">
+                    <span>➕</span>
+                    <span>Déclarer</span>
+                </a>
+            </div>
+        {% else %}
+            <div class="cta-group">
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    <span>🔐</span>
+                    <span>Se connecter</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Features Grid -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Rapide</h3>
+            <p class="feature-description">Déclarez en quelques clics</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3 class="feature-title">Sécurisé</h3>
+            <p class="feature-description">Données protégées</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Transparent</h3>
+            <p class="feature-description">Suivi en temps réel</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
