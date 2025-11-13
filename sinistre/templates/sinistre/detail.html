@@ -1,0 +1,77 @@
+<!-- templates/sinistre/detail.html -->
+{% extends 'base.html' %}
+{% block title %}{{ titre_page }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h2>{{ sinistre.titre }}</h2>
+        <p><strong>Client :</strong> {{ sinistre.client.username }}</p>
+        <p><strong>Type :</strong> {{ sinistre.get_type_sinistre_display }}</p>
+        <p><strong>Statut :</strong> {{ sinistre.get_statut_display }}</p>
+        <p><strong>Date de déclaration :</strong> {{ sinistre.date_declaration|date:"d/m/Y H:i" }}</p>
+        <p><strong>Montant demandé :</strong> 
+            {% if sinistre.montant_demande %}{{ sinistre.montant_demande }} DT{% else %}Non spécifié{% endif %}
+        </p>
+        <p><strong>Description :</strong></p>
+        <p>{{ sinistre.description }}</p>
+
+        <!-- Formulaire de modification -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_titre">Titre</label>
+                <input type="text" name="titre" value="{{ sinistre.titre }}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="id_client">Client</label>
+                <select name="client" class="form-select" required>
+                    {% for user in users %}
+                        <option value="{{ user.id }}" {% if user == sinistre.client %}selected{% endif %}>
+                            {{ user.username }} ({{ user.email }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_type_sinistre">Type de sinistre</label>
+                <select name="type_sinistre" class="form-select" required>
+                    {% for key, label in type_choices %}
+                        <option value="{{ key }}" {% if sinistre.type_sinistre == key %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_statut">Statut</label>
+                <select name="statut" class="form-select" required>
+                    {% for key, label in statut_choices %}
+                        <option value="{{ key }}" {% if sinistre.statut == key %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_date_declaration">Date de déclaration</label>
+                <input type="datetime-local" name="date_declaration" value="{{ sinistre.date_declaration|date:'Y-m-d\\TH:i' }}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="id_description">Description</label>
+                <textarea name="description" class="form-control" rows="4" required>{{ sinistre.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="id_montant_demande">Montant demandé</label>
+                <input type="number" step="0.01" name="montant_demande" value="{{ sinistre.montant_demande|default_if_none:'' }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="id_montant_indemnisation">Montant d'indemnisation</label>
+                <input type="number" step="0.01" name="montant_indemnisation" value="{{ sinistre.montant_indemnisation|default_if_none:'' }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            <a href="{% url 'sinistre:liste_sinistres' %}" class="btn btn-secondary">← Retour à la liste</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

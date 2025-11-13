@@ -1,0 +1,384 @@
+<!-- templates/registration/login.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Connexion - AssurMaghrebia{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #1e40af;
+        --primary-dark: #1e3a8a;
+        --accent: #f59e0b;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --white: #ffffff;
+        --error: #dc3545;
+    }
+
+    .login-wrapper {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .login-container {
+        background: var(--white);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: visible;
+        max-width: 450px;
+        width: 100%;
+        animation: fadeInUp 0.6s ease-out;
+        position: relative;
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        padding: 50px 40px 40px;
+        text-align: center;
+        position: relative;
+        border-radius: 24px 24px 0 0;
+    }
+
+    /* Icône repositionnée */
+    .login-icon {
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70px;
+        height: 70px;
+        background: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        z-index: 10;
+        animation: iconBounce 0.6s ease-out 0.3s both;
+    }
+
+    @keyframes iconBounce {
+        0% {
+            transform: translateX(-50%) translateY(-20px) scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: translateX(-50%) translateY(5px) scale(1.1);
+        }
+        100% {
+            transform: translateX(-50%) translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    .login-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        letter-spacing: -0.5px;
+    }
+
+    .login-subtitle {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+
+    .login-body {
+        padding: 55px 40px 40px;
+    }
+
+    .error-message {
+        background: #fee2e2;
+        border-left: 4px solid var(--error);
+        color: #991b1b;
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 24px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: shake 0.5s ease-out;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        letter-spacing: 0.3px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 18px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        background: #fafafa;
+        color: var(--text-dark);
+        font-weight: 500;
+    }
+
+    .form-input::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: var(--white);
+        box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .form-input.error {
+        border-color: var(--error);
+        background: #fef2f2;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        letter-spacing: 0.5px;
+        margin-top: 8px;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(30, 64, 175, 0.4);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 28px 0;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .divider span {
+        padding: 0 16px;
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    .forgot-password a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+
+    /* Amélioration de la lisibilité des inputs */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text-dark);
+        -webkit-box-shadow: 0 0 0 1000px #fafafa inset;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+        20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
+
+    /* Badge de sécurité sur l'icône */
+    .login-icon::after {
+        content: '✓';
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        border: 3px solid white;
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            margin: 20px;
+            max-width: 100%;
+        }
+
+        .login-header {
+            padding: 40px 24px 35px;
+        }
+
+        .login-title {
+            font-size: 1.7rem;
+        }
+
+        .login-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .login-icon {
+            width: 65px;
+            height: 65px;
+            font-size: 2rem;
+            bottom: -32px;
+        }
+
+        .login-body {
+            padding: 50px 24px 30px;
+        }
+
+        .form-input {
+            font-size: 16px; /* Évite le zoom sur iOS */
+        }
+    }
+
+    @media (max-width: 400px) {
+        .login-header {
+            padding: 35px 20px 30px;
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+        }
+
+        .login-body {
+            padding: 45px 20px 25px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-container">
+        <div class="login-header">
+            <h1 class="login-title">Connexion</h1>
+            <p class="login-subtitle">Accédez à votre espace AssurMaghrebia</p>
+        </div>
+        
+        <div class="login-icon">🔐</div>
+
+        <div class="login-body">
+            {% if form.errors %}
+                <div class="error-message">
+                    <span>⚠️</span>
+                    <span>Identifiant ou mot de passe incorrect</span>
+                </div>
+            {% endif %}
+
+            <form method="post" autocomplete="on">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_username" class="form-label">Nom d'utilisateur</label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="id_username"
+                        class="form-input {% if form.errors %}error{% endif %}"
+                        value="{{ form.username.value|default:'' }}"
+                        required
+                        autofocus
+                        autocomplete="username"
+                        placeholder="Entrez votre nom d'utilisateur"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password" class="form-label">Mot de passe</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="id_password"
+                        class="form-input {% if form.errors %}error{% endif %}"
+                        required
+                        autocomplete="current-password"
+                        placeholder="Entrez votre mot de passe"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Se connecter
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>ou</span>
+            </div>
+
+            <div class="forgot-password">
+                <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

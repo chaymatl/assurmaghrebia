@@ -1,0 +1,42 @@
+<!-- templates/sinistre/accueil.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>AssurMaghrebia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <h1 class="text-center mb-4">AssurMaghrebia</h1>
+        <p class="text-center">Gestion simplifiée de vos sinistres</p>
+
+        <!-- Menu -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Bonjour, {{ user.username }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li class="list-group-item"><a href="{% url 'espace_client:accueil' %}">Mes sinistres</a></li>
+                <li class="list-group-item"><a href="{% url 'logout' %}">Déconnexion</a></li>
+            </ul>
+        </div>
+
+        <!-- Boutons principaux -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <a href="{% url 'espace_client:accueil' %}" class="btn btn-primary w-100">
+                    <i class="fas fa-folder me-2"></i>Mes sinistres
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <a href="{% url 'sinistre:create_sinistre' %}" class="btn btn-warning w-100">
+                    <i class="fas fa-plus me-2"></i>Déclarer un sinistre
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
